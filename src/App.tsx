@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react'
+import {BrowserRouter as Router, Navigate, Outlet, Route, Routes} from 'react-router-dom'
+import LoginPage from './application/pages/login/LoginPage'
+import './App.css'
+import Error from "./application/pages/error/Error";
+import UserContext from './application/contexts/UserContext'
+import {Layout} from "./application/layout/Layout";
+
+type PrivateRouteProps = {
+  isAuthenticated: boolean;
+  redirectPath?: string;
+  outlet: JSX.Element;
+  children?: React.ReactNode;
+};
 
 function App() {
+  const auth = localStorage.getItem('token');
+  const initialIsAuthenticated = !!auth;
+  const [isAuthenticated, setIsAuthenticated] = useState(initialIsAuthenticated);
+
+  const defaultProtectedRouteProps = {
+    isAuthenticated: isAuthenticated,
+    redirectPath: "/",
+    outlet: <Outlet/>,
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+        <UserContext.Provider value={{isAuthenticated, setIsAuthenticated}}>
+          <Router>
+            <Routes>
+              <Route path="/"
+                     element={<LoginPage/>}/>
+              <Route path="/*"
+                     element={<PrivateRoute {...defaultProtectedRouteProps}
+                                            outlet={<Layout/>}/>}/>
+              <Route path="*"
+                     element={<Error/>}/>
+            </Routes>
+          </Router>
+        </UserContext.Provider>
+      </div>
   );
+
+  function PrivateRoute({isAuthenticated, redirectPath, outlet}: PrivateRouteProps) {
+    if (isAuthenticated) {
+      return outlet;
+    } else {
+      return <Navigate to={{pathname: redirectPath}}/>;
+    }
+  }
 }
 
 export default App;
