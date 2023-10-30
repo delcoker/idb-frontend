@@ -4,9 +4,7 @@ import EmployeeModal from "../employeemodal/EmployeeModal";
 import {CustomMuiToolbar} from "../toolbar/CustomMuiToobar";
 import {StripedDataGrid} from "../reusable/StripedDataGrid";
 import {useNavigate} from "react-router-dom";
-import OrchestratorServiceImpl from "../../services/OrchestratorServiceImpl";
 import container from "../../../Container";
-import EmployeeRepository from "../../../domain/repositories/EmployeeRepository";
 import OrchestratorService from "../../services/OrchestratorService";
 
 const VISIBLE_FIELDS = ['countryId', 'id', 'email', 'userType'];
@@ -38,7 +36,6 @@ let columns = [
 
 export default function EmployeeDataTable() {
     const navigate = useNavigate();
-    const employeeRepository = container.resolve<EmployeeRepository>('EmployeeRepository');
     const orchestratorService = container.resolve<OrchestratorService>('OrchestratorService');
 
     const [pageSize, setPageSize] = React.useState(15);

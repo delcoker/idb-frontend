@@ -33,6 +33,8 @@ import AuthRepositoryImpl from "./infrastructure/repositories/AuthRepositoryImpl
 import ApiClientImpl from "./infrastructure/utils/ApiClientImpl";
 import EmployeeRepositoryImpl from "./infrastructure/repositories/EmployeeRepositoryImpl";
 import OrchestratorServiceImpl from "./application/services/OrchestratorServiceImpl";
+import AlertDataRepositoryImpl from "./infrastructure/repositories/AlertDataRepositoryImpl";
+import HMLDataRepositoryImpl from "./infrastructure/repositories/HMLDataRepositoryImpl";
 
 class Container {
     private dependencies: { [key: string]: any } = {};
@@ -70,7 +72,8 @@ container.register('IdbApiClient', new ApiClientImpl(idbEndpoint));
 container.register('AuthRepository', new AuthRepositoryImpl(container.resolve('IdbApiClient')));
 container.register('EmployeeRepository', new EmployeeRepositoryImpl(container.resolve('IdbApiClient')));
 container.register('OrchestratorService', new OrchestratorServiceImpl(container.resolve('EmployeeRepository')));
-// container.register('PaymentMethodRepository', new PaymentMethodRepositoryImpl());
+container.register('AlertDataRepository', new AlertDataRepositoryImpl());
+container.register('HMLDataRepository', new HMLDataRepositoryImpl());
 // container.register('ReportRepository', new ReportRepositoryImpl());
 // container.register('SaleRepository', new SaleRepositoryImpl());
 // container.register('TaxRepository', new TaxRepositoryImpl());
